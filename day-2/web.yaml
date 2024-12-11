@@ -1,0 +1,14 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+        app: myappintemp
+spec:
+  containers:
+  - name: web
+    image: vaishalitapaswi/synjavaimg1024
+    ports:
+    - containerPort: 8080
+
