@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-container
+  # namespace: custom
+  labels:
+    app: multi-container
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: match-multi-container
+  template:
+    metadata:
+      labels:
+        app: match-multi-container
+    spec:
+      containers:
+        - name: nginx1
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+        - name: tomcat
+          image: tomcat
+          ports:
+            - containerPort: 8080
