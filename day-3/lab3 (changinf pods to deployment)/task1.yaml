@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab3
+spec:
+  selector:
+    matchLabels:
+      app: shared-mount-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: shared-mount-app
+    spec:
+      volumes:
+        - name: myvol
+          persistentVolumeClaim:
+            claimName: pvc123
+      containers:
+        - name: shared-mount-app-container
+          image: nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: myvol
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mypv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc123
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
